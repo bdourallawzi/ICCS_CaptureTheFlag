@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Plan>
+  <ActionPatterns>
+    <ActionPattern name ="AP-DefendBase">
+        <Action name ="MovetoDefendPosition2"></Action>
+    </ActionPattern>      
+    <ActionPattern name ="AP-ShootBack">
+        <Action name ="LookAtDamage"></Action>
+        <Action name ="ShootEnemiesInSight"></Action>
+    </ActionPattern>      
+    <ActionPattern name ="AP-ShootEnemiesInSight">
+        <Action name ="ShootEnemiesInSight"></Action>
+    </ActionPattern>
+    <ActionPattern name ="AP-MoveAround">
+        <Action name ="LookTowardsDirection"></Action>
+        <Action name ="MoveToNextNode"></Action>
+    </ActionPattern>
+    <ActionPattern name ="AP-Return">
+        <Action name ="ReturnToBase"></Action>
+    </ActionPattern>
+  </ActionPatterns>
+  <CompetenceElements>
+    <CompetenceElement name ="CE-Test" triggers ="AP-ShootBack">
+      <Senses>
+        <Sense name="UnderAttack" value ="1" comperator="bool"></Sense>
+      </Senses>
+    </CompetenceElement>
+    <CompetenceElement name ="CE-Shoot" triggers ="AP-ShootEnemiesInSight">
+      <Senses>
+      </Senses>
+    </CompetenceElement>
+  </CompetenceElements>
+  <Competences>
+    <Competence name="C-Shoot">
+      <Goals>
+        <Goal name="AllTargetsAreDead" value ="1" comperator="bool"></Goal>
+      </Goals>
+      <CompetenceElements>
+        <CompetenceElement name="CE-Shoot"></CompetenceElement>
+      </CompetenceElements>
+    </Competence>
+  </Competences>
+  <DriveElements>
+    <DriveElement name="DE-ShootBack" triggers ="AP-ShootBack" checkTime ="0">
+      <Senses>
+        <Sense name="UnderAttack" value ="1" comperator="bool"></Sense>
+      </Senses>
+    </DriveElement>
+    <DriveElement name="DE-ShootEnemies" triggers ="C-Shoot" checkTime ="0">
+      <Senses>
+        <Sense name ="EnemiesSpotted" value ="1" comperator ="bool"></Sense>
+      </Senses>
+    </DriveElement>
+    <DriveElement name="DE-MoveAround" triggers ="AP-MoveAround" checkTime ="0.1">
+      <Senses>
+        <Sense name ="DoesPathExist" value ="1" comperator ="bool"></Sense>
+        <Sense name="UnderAttack" value ="0" comperator="bool"></Sense>
+      </Senses>
+    </DriveElement>
+    <DriveElement name="DE-PositionDefenders" triggers ="AP-DefendBase" checkTime ="1">
+      <Senses>
+      </Senses>
+    </DriveElement>
+  </DriveElements>
+  <Drives>
+    <Drive name="D-DefendersPosition" priority="1">
+      <Senses>
+      </Senses>
+      <DriveElements>
+        <DriveElement name="DE-PositionDefenders"></DriveElement>
+        <DriveElement name="DE-ShootBack"></DriveElement>
+        <DriveElement name="DE-ShootEnemies"></DriveElement>
+      </DriveElements>
+    </Drive>
+    <Drive name="D-KillEnemies" priority="1">
+      <Senses>
+          <Sense name ="EnemiesSpotted" value ="1" comperator ="bool"></Sense>
+      </Senses>
+      <DriveElements>
+        <DriveElement name="DE-ShootBack"></DriveElement>
+        <DriveElement name="DE-ShootEnemies"></DriveElement>
+      </DriveElements>
+    </Drive>
+
+  </Drives>
+</Plan>
